@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تأجير المعدات الثقيلة في سوريا</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --main-color: #f39c12; --dark-color: #2c3e50; --light-bg: #f4f6f7; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background-color: var(--light-bg); color: #333; }
+        header { background-color: var(--dark-color); color: #fff; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { color: var(--main-color); font-size: 1.8rem; }
+        header a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 5px; }
+        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=1200&q=80'); background-size: cover; background-position: center; color: white; text-align: center; padding: 50px 20px; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .card-category { background: #eee; color: #555; padding: 3px 8px; border-radius: 3px; font-size: 0.8rem; display: inline-block; margin-bottom: 10px; }
+        .card-title { font-size: 1.3rem; margin-bottom: 10px; color: var(--dark-color); }
+        .card-desc { font-size: 0.95rem; color: #666; margin-bottom: 15px; line-height: 1.4; }
+        .card-contact { display: flex; gap: 10px; }
+        .btn-call, .btn-whatsapp { flex: 1; text-align: center; padding: 10px; border-radius: 5px; text-decoration: none; color: white; font-weight: bold; }
+        .btn-call { background-color: #2980b9; }
+        .btn-whatsapp { background-color: #25D366; }
+        footer { text-align: center; padding: 20px; background: var(--dark-color); color: white; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>سُوريا للمعدات الثقيلة</h1>
+        <a href="{{ url_for('login') }}"><i class="fas fa-lock"></i> لوحة التحكم</a>
+    </header>
+
+    <section class="hero">
+        <h2>منصة تأجير الآليات والمعدات الثقيلة في سوريا</h2>
+        <p>تصفح المعدات المتاحة والتواصل المباشر مع أصحاب العمل</p>
+    </section>
+
+    <div class="container">
+        <div class="grid">
+            {% for item in equipments %}
+            <div class="card">
+                <img src="{{ item.image }}" alt="{{ item.name }}">
+                <div class="card-body">
+                    <span class="card-category">{{ item.category }}</span>
+                    <h3 class="card-title">{{ item.name }}</h3>
+                    <p class="card-desc">{{ item.description }}</p>
+                    <div class="card-contact">
+                        <a href="tel:{{ item.phone }}" class="btn-call"><i class="fas fa-phone"></i> اتصال</a>
+                        <a href="https://wa.me/{{ item.clean_phone }}" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p style="text-align:center; grid-column: 1/-1;">لا توجد معدات معروضة حالياً.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة &copy; موقع تأجير المعدات الثقيلة - سوريا</p>
+    </footer>
+</body>
+</html>
