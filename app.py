@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-ADMIN_PASSWORD = 'admin123'  # كلمة مرور لوحة التحكم
+ADMIN_PASSWORD = '0551393371'  # كلمة مرور لوحة التحكم
 
 class Equipment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
