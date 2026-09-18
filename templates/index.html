@@ -31,8 +31,10 @@
 <body>
     <header>
         <h1>سُوريا للمعدات الثقيلة</h1>
-        <a href="{{ url_for('login') }}"><i class="fas fa-lock"></i> لوحة التحكم</a>
-    </header>
+{% if session.get('admin_logged_in') %}
+    <a href="{{ url_for('admin') }}"><i class="fas fa-lock"></i> لوحة التحكم</a>
+    <a href="{{ url_for('logout') }}" style="color: red; margin-right: 10px;">تسجيل الخروج</a>
+{% endif %}    </header>
 
     <section class="hero">
         <h2>منصة تأجير الآليات والمعدات الثقيلة في سوريا</h2>
