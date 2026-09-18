@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'syria_heavy_equipment_secret_key_2026'
 
-# قراءة متغير البيئة DATABASE_URL من Render للتوصيل مع PostgreSQL
+# PostgreSQL للوصول مع Render من DATABASE_URL قراءة متغير البيئة #
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-ADMIN_PASSWORD = '0551393371'  # كلمة مرور لوحة التحكم
+ADMIN_PASSWORD = '0551393371'  # كلمة مرور لوحة التحكم #
 
 class Equipment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,12 +36,12 @@ def index():
         clean_phone = ''.join(filter(str.isdigit, eq.phone))
         if clean_phone.startswith('0'):
             clean_phone = '963' + clean_phone[1:]
-        
+
         formatted_equipments.append({
             'id': eq.id,
             'name': eq.name,
             'category': eq.category,
-            'image': eq.image if eq.image else 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=600&q=80',
+            'image': eq.image if eq.image else 'https://images.unsplash.com/photo-1578575437130-527eed3abbec',
             'description': eq.description,
             'phone': eq.phone,
             'clean_phone': clean_phone
@@ -54,7 +54,7 @@ def login():
     if request.method == 'POST':
         password = request.form.get('password')
         if password == ADMIN_PASSWORD:
-            session['logged_in'] = True
+            session['admin_logged_in'] = True
             return redirect(url_for('admin'))
         else:
             flash('كلمة المرور غير صحيحة!')
@@ -62,14 +62,19 @@ def login():
 
 @app.route('/admin')
 def admin():
-    if not session.get('logged_in'):
+    if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     equipments = Equipment.query.order_by(Equipment.id.desc()).all()
     return render_template('admin.html', equipments=equipments, login_page=False)
 
+@app.route('/logout')
+def logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('index'))
+
 @app.route('/add', methods=['POST'])
 def add_equipment():
-    if not session.get('logged_in'):
+    if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
 
     new_eq = Equipment(
@@ -85,18 +90,13 @@ def add_equipment():
 
 @app.route('/delete/<int:id>')
 def delete_equipment(id):
-    if not session.get('logged_in'):
+    if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
 
     eq = Equipment.query.get_or_404(id)
     db.session.delete(eq)
     db.session.commit()
     return redirect(url_for('admin'))
-
-@app.route('/logout')
-def logout():
-    session.pop('logged_in', None)
-    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
